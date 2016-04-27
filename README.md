@@ -24,7 +24,7 @@ numbers below).
 
 
 ```
-  :plugins [[lein-s3-wagon-vault "INSERT_VERSION"]
+  :plugins [[ai.wadeandwendy/lein-s3-wagon-vault "INSERT_VERSION"]
             [s3-wagon-private "1.2.0"]]
 ```
 
