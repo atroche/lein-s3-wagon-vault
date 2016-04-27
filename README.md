@@ -1,22 +1,22 @@
 # lein-s3-wagon-vault
 
-A Leiningen (middleware) plugin to inject a "releases" private s3 
-repository using AWS credentials obtained from [Hashicorp's Vault](https://www.vaultproject.io/docs/secrets/aws/). 
+A Leiningen (middleware) plugin to inject a "releases" private s3
+repository using AWS credentials obtained from [Hashicorp's Vault](https://www.vaultproject.io/docs/secrets/aws/).
 
 ## Usage
 
 ### SSL Cert
 
-If your vault server has an SSL certificate from Letsencrypt, and you's using 
-Oracle's Java or an older java, you might have add the letsencrypt CA cert 
+If your vault server has an SSL certificate from Letsencrypt, and you's using
+Oracle's Java or an older java, you might have add the letsencrypt CA cert
 to your JVM.
 
 There are other ways to do this, but we used this script:
 https://gist.github.com/Firefishy/109b0f1a90156f6c933a50fe40aa777e
 
-### project.clj 
+### project.clj
 
-Add into the `:plugins` vector of your project.clj (use the latest version 
+Add into the `:plugins` vector of your project.clj (use the latest version
 numbers below).
 
 
@@ -28,22 +28,24 @@ numbers below).
             [s3-wagon-private "1.2.0"]]
 ```
 
-And add a s3 private repo to the `:repositories` key as per the 
-[s3-private-wagon](https://github.com/technomancy/s3-wagon-private) instructions. 
-In the repo definition, for :username and :passphrase specify `:vault/aws/creds/YOUR_KEY`
-where "aws/creds/YOUR_KEY" is the path in vault for your AWS credentials.  This 
+And add a s3 private repo to the `:repositories` key as per the
+[s3-private-wagon](https://github.com/technomancy/s3-wagon-private) instructions.
+In the repo definition, for :username and :passphrase specify `":vault/aws/creds/YOUR_KEY"`
+where "aws/creds/YOUR_KEY" is the path in vault for your AWS credentials.  This
 path must start wth "aws/creds/".
 
 ```
   :repositories [["releases"
                   {:url           "s3p://mvn.YOUR.DOMAIN/releases/"
-                   :username      :vault/aws/creds/YOUR_KEY
-                   :passphrase    :vault/aws/creds/YOUR_KEY
+                   :username      ":vault/aws/creds/YOUR_KEY"
+                   :passphrase    ":vault/aws/creds/YOUR_KEY"
                    :sign-releases false}]]
 ```
 
+NOTE: Notice that the value of :username and :passphrase are Strings. I wanted
+them to be Keywords, but ran into an error. I believe it is this [bug](https://github.com/technomancy/leiningen/issues/1643).
 
-### Environment 
+### Environment
 
 This plugin requires several ENVIRONMENT VARIABLES for Vault:
 
@@ -54,14 +56,14 @@ export VAULT_TOKEN=`cat $HOME/.vault-token`
 
 ### AWS policy
 
-You'll also need to set up an AWS policy as per Vault instructions granting 
+You'll also need to set up an AWS policy as per Vault instructions granting
 read/write access to the s3 bucket mentioned above, for example:
 
 ```
 vault write aws/roles/maven-repo policy=@tmp/maven-repo-policy.json
 ```
 
-You can set this as a Vault inline policy or as an AWS policy (see Vault AWS 
+You can set this as a Vault inline policy or as an AWS policy (see Vault AWS
 mount docs).  Sample policy:
 
 ```
@@ -94,8 +96,8 @@ mount docs).  Sample policy:
 
 ### Test
 
-After adding the plugin to your project.clj, test it out with the 
-lein-pprint(https://github.com/technomancy/leiningen/tree/master/lein-pprint) 
+After adding the plugin to your project.clj, test it out with the
+lein-pprint(https://github.com/technomancy/leiningen/tree/master/lein-pprint)
 plugin:
 
 ```
