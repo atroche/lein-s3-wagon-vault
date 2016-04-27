@@ -19,8 +19,12 @@ https://gist.github.com/Firefishy/109b0f1a90156f6c933a50fe40aa777e
 Add into the `:plugins` vector of your project.clj (use the latest version 
 numbers below).
 
+
+[![Clojars Project](https://img.shields.io/clojars/v/ai.wadeandwendy/lein-s3-wagon-vault.svg)](https://clojars.org/ai.wadeandwendy/lein-s3-wagon-vault)
+
+
 ```
-  :plugins [[lein-s3-wagon-vault "0.1.0"]
+  :plugins [[lein-s3-wagon-vault "INSERT_VERSION"]
             [s3-wagon-private "1.2.0"]]
 ```
 
