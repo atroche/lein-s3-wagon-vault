@@ -11,8 +11,15 @@ If your vault server has an SSL certificate from Letsencrypt, and you's using
 Oracle's Java or an older java, you might have add the letsencrypt CA cert
 to your JVM.
 
-There are other ways to do this, but we used this script:
-https://gist.github.com/Firefishy/109b0f1a90156f6c933a50fe40aa777e
+There are other ways to do this, but we used this [script](https://gist.github.com/Firefishy/109b0f1a90156f6c933a50fe40aa777e). In addition 
+to running the script, if you're using IntelliJ (or other GUI that will run leiningen) 
+you might need todo a couple more steps:
+
+1. Make your VAULT_* environment variables visible to gui applications.  [On a mac](http://stackoverflow.com/questions/135688/setting-environment-variables-in-os-x/32405815#32405815)
+
+2. Change the IntelliJ boot JDK to the one "fixed" by the script.  To do this see [here](http://blog.jetbrains.com/idea/2015/05/intellij-idea-14-1-4-eap-141-1192-is-available/)
+
+
 
 ### project.clj
 
