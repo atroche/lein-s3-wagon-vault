@@ -5,7 +5,8 @@
     [clojure.edn :as edn]
     [leiningen.core.main :as main]
     [vault.client :as vault])
-  (:import (java.util Date)))
+  (:import
+    java.util.Date))
 
 (defn validate-env
   []
@@ -25,7 +26,7 @@
         vault-token (System/getenv "VAULT_TOKEN")
         client (vault/http-client vault-addr)]
     (vault/authenticate! client :token vault-token)
-    client))
+      client))
 
 (defn get-creds
   "Get credentials from cache or from vault.
@@ -72,16 +73,22 @@
 
 (defn inject-vault
   [repo-list]
-  (mapv
-    (fn [[repo-name {:keys [username passphrase] :as repo}]]
-      (if (or (vaulted? username) (vaulted? passphrase))
-        (if-not (= username passphrase)
-          (throw (ex-info (str "Invalid :repositories entry, if using vault aws creds, "
-                               "then username and password must have the same setting")
-                          {:repository repo}))
-          [repo-name (update-creds repo (second (re-find #"^:vault/(.+)" username)))])
-        [repo-name repo]))
-    repo-list))
+  (try
+    (mapv
+      (fn [[repo-name {:keys [username passphrase] :as repo}]]
+        (if (or (vaulted? username) (vaulted? passphrase))
+          (if-not (= username passphrase)
+            (throw (ex-info (str "Invalid :repositories entry, if using vault aws creds, "
+                                 "then username and password must have the same setting")
+                            {:repository repo}))
+            [repo-name (update-creds repo (second (re-find #"^:vault/(.+)" username)))])
+          [repo-name repo]))
+      repo-list)
+    (catch Exception e
+      ; If there are errors (vault, network, etc), don't make lein bomb,
+      ; just skip updating the repo-list.
+      (.printStackTrace e)
+      repo-list)))
 
 (defn middleware [project]
   (-> project

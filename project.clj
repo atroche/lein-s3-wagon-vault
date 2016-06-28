@@ -1,4 +1,4 @@
-(defproject ai.wadeandwendy/lein-s3-wagon-vault "0.2.0"
+(defproject ai.wadeandwendy/lein-s3-wagon-vault "0.3.0"
 
   :description "lein plugin connecting to s3-wagon-private and credentials for Hashicorp Vault"
 
